@@ -21,15 +21,53 @@ set.seed(2703)
 #Data:
 
 #header info
-hdr_o <- read.csv("data/header_info_cum_resp_YRB_data_0725_2022.csv")
+
+# PENDING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #values
-dat_o <- read.csv("data/cum_resp_YRB_data_0725_2022_entropy.csv", 
+rsp_o <- read.csv("data/230116_yrb_respt_vars.csv", 
                 stringsAsFactors=TRUE)
-lnd_o <- read.csv("data/YRB_comid_landuse_2011.csv", 
+hbc_o <- read.csv("data/230117_yrb_hbgc_vars.csv",
+                  stringsAsFactors = TRUE)
+lnd_o <- read.csv("data/230117_yrb_cmid_land_2011.csv", 
                 stringsAsFactors=TRUE)
 #This is the land use data used by Son et al., 2022a and 2022b to model inputs of 
 #DOC, NO3, and OD to the YR (Although the map in the figures uses NLDC-2016).
+
+# Renaming and homogenizing variables
+
+# resp_o variables
+
+rsp_o <- rename(rsp_o,
+comid = COMID,
+lngt_drg = CAT_STREAM_LENGTH,
+slop_drg = CAT_STREAM_SLOPE,
+lngt_wsd = TOT_STREAM_LENGTH,
+slop_wsd = TOT_STREAM_SLOPE,
+area_drg = CAT_BASIN_AREA,
+area_wsd = TOT_BASIN_AREA,
+lngt_stm = stream_length_m,
+area_stm = pred_stream_area_m2_fill,
+clgt_stm = cum_stream_length_m,
+csar_stm = cum_stream_area_m2,
+crsp_mss = cum_totco2g_day,
+crsp_sta = cum_totco2g_day_Tsurface_m2,
+crsp_wsa = cum_totco2g_day_Tdrain_m2
+)
+rsp_o$wdth_stm <- 10^(rsp_o$pred_logw_m) # adding a column with stream width in 
+# m instead of the logarithm
+
+# Let's test this calculation with a plot
+
+p <- ggplot(rsp_o,aes(lngt_stm*wdth_stm,area_stm))+
+  geom_point()+
+  geom_abline()+
+  scale_x_log10()+
+  scale_y_log10()
+p
+
+# There are a few values that fall below the predicted area. We will check those
+# and replace them with the appropriate estimate
 
 
 # Processing land cover data
