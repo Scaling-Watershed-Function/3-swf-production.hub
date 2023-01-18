@@ -1,2 +1,2 @@
-# swf-production.hub
-This is our repository for everything code. Scripts for documents, quarto websites, data visualizations, etc. would reside here.
+# scaling_rivers-website
+Public repository for sharing data and discussions about the project

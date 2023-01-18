@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Welcome",
+    "section": "",
+    "text": "We are glad you are here!"
+  },
+  {
+    "objectID": "about.html#who-are-we",
+    "href": "about.html#who-are-we",
+    "title": "Welcome",
+    "section": "Who are we?",
+    "text": "Who are we?\nA team of River corridor scientists working at the Pacific Northwest National Laboratory. My name is Francisco Guerrero and I maintain this website."
+  },
+  {
+    "objectID": "about.html#so-what-is-this",
+    "href": "about.html#so-what-is-this",
+    "title": "Welcome",
+    "section": "So, what is this?",
+    "text": "So, what is this?\nThis website is an evolving invitation to collaborate. We want to scale up local river metabolism data across the entire riverine network. This effort started with a discussion of Wolheim et al’s paper # Superlinear scaling of riverine biogechemical function with watershed size."
+  },
+  {
+    "objectID": "about.html#our-roadmap",
+    "href": "about.html#our-roadmap",
+    "title": "Welcome",
+    "section": "Our roadmap",
+    "text": "Our roadmap\nWe have discussed some of the basic concepts in the paper sumary you can find here. We will be adding data to explore fundamental ideas about allometric scaling in river networks.\nDo you want to join us? Fork this repo and reach out. Shoot me an email to francisco.guerrero@pnnl.gov.\nLet’s get started!"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Intro",
+    "section": "",
+    "text": "Hi there! We chose Wolheim et al’s paper Superlinear scaling of riverine biogechemical function with watershed size for one of our team’s science discussions. We are currently collecting metabolic data across the Yakima River Basin. We use this data to inform models than can help us predict respiration rates at an unmeasured locations, and also identify places with high uncertainty to refine our sampling scheme.\nIn what follows, we present a summary of the paper and dive into the underlaying concepts of allometric scaling."
+  },
+  {
+    "objectID": "index.html#question-1-name-the-following",
+    "href": "index.html#question-1-name-the-following",
+    "title": "Intro",
+    "section": "Question 1: Name the following",
+    "text": "Question 1: Name the following\n\n\n\nNatural and abstract patterns in nature"
+  },
+  {
+    "objectID": "index.html#question-2-what-do-these-three-things-have-in-common",
+    "href": "index.html#question-2-what-do-these-three-things-have-in-common",
+    "title": "Intro",
+    "section": "Question 2: What do these three things have in common?",
+    "text": "Question 2: What do these three things have in common?\nHere is a hint:\n\n\n\nThe branching pattern of the cantor’s set.\n\n\nThe keyword we are looking for is **fractals**. Have you ever heard about them? If the concept sounds too foreing, let’s *break it down* into pieces:\nAccording to the Online Etymology Dictionarya fractal is ““never-ending pattern,” 1975, from French fractal, ultimately from Latin fractus “interrupted, irregular,” literally “broken,” past participle of frangere “to break” (from PIE root bhreg “to break”). Coined by French mathematician Benoit Mandelbrot (1924-2010) in “Les Objets Fractals.””"
+  }
+]
