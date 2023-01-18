@@ -34,10 +34,10 @@ theme_httn<-  theme(axis.text=element_text(colour="black",size=22),
                     axis.title = element_text(size = 32, face = "bold"),
                     panel.grid.minor= element_line(colour = "gray", linetype = "dotted"), 
                     panel.grid.major = element_line(colour = "gray", linetype = "dashed"),
-                    panel.border = element_rect(fill=NA, colour = "black", size=1.5),
+                    panel.border = element_rect(fill=NA, colour = "black", linewidth = 1.5),
                     panel.background=element_rect(fill="white"),
                     axis.ticks.length = unit(0.254, "cm"),
-                    axis.ticks = element_line(colour = "black", size=1), 
+                    axis.ticks = element_line(colour = "black", linewidth = 1), 
                     axis.line = element_line(colour = "black"),
                     legend.position = c(0.85,0.25),
                     legend.direction = "vertical",
@@ -69,12 +69,12 @@ bgc_cln <- as_tibble(na.exclude(bgc_cln0))# Removing all NA's corresponding
 
 # There are extremely low values resulting from the calculation of hrt (Total Relative
 # Entropy)
-
+`
 bgc_cln <- bgc_cln %>% 
   mutate(hrt = if_else(ht==0,0,hrt))
 
 summary(bgc_cln)
-
+`
 # The original data needs to be tidy up with respect to factor levels for land 
 # cover to make it into a long format
 
