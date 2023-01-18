@@ -15,6 +15,9 @@
 # To run this code in macos it is necessary to install XQuartz from 
 #www.xquartz.org
 
+# Also, you may need to install the GIT credential manager following the instructions
+# from: https://github.com/GitCredentialManager/git-credential-manager/blob/main/README.md
+
 rm()
 
 librarian::shelf(ggplot2,# for plotting
