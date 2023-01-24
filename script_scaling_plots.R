@@ -20,12 +20,10 @@
 
 rm()
 
-librarian::shelf(ggplot2,# for plotting
-                 dplyr,# for data wrangling
+librarian::shelf(tidyverse,# for plotting
                  plot3D,# for 3D plots
                  plot3Drgl,# for interactive 3D plots
                  rgl,# required by plot3Drgl
-                 tidyverse,#data wrangling and tidying
                  entropy,#Information theory calculations
                  GGally,#pair plots
                  scales,# manipulating log scales
@@ -56,28 +54,15 @@ set.seed(2703)
 # pending!!!!!
 
 #values
-bgc_cln0 <- read.csv("230109_scaling_lnd_bgc.csv", 
+bgc_cln0 <- read.csv("assets/data/230123_scaling_lnd_bgc.csv", 
                   stringsAsFactors=TRUE)
-bgc_cln <- as_tibble(na.exclude(bgc_cln0))# Removing all NA's corresponding
-# to multiple ancillary variables:
-# d50m
-# order
-# doc_annual
-# do_annual
-# nitrates
-# res_time
-# hz_exchng
-# aer_resp
-# anb_resp
 
-# There are extremely low values resulting from the calculation of hrt (Total Relative
-# Entropy)
-`
-bgc_cln <- bgc_cln %>% 
-  mutate(hrt = if_else(ht==0,0,hrt))
+bgc_cln0 <- bgc_cln0[,2:ncol(bgc_cln0)]
 
-summary(bgc_cln)
-`
+summary(bgc_cln0)
+
+bgc_cln <- na.exclude(bgc_cln0) # a drop of 1035 additional data points.
+
 # The original data needs to be tidy up with respect to factor levels for land 
 # cover to make it into a long format
 
@@ -89,7 +74,7 @@ summary(bgc_cln)
 # Let's start with a quick pairs plot to have a glimpse of the relationships among
 # variables
 
-# Respiration and physical variables
+# Physical variables & Land Use
 
 # adding a smooth loess to the paired plot
 
@@ -101,25 +86,38 @@ my_fn <- function(data, mapping, pts=list(), smt=list(), ...){
     do.call(geom_smooth, smt) 
 }
 
+# Let's start looking at correlation between some physical and biogeochemical variables:
+
+
 paired_plot <- select(bgc_cln,
-                      acm_resp,
-                      wshd_area,
+                      comid,
+                      wsd_are,
+                      frst,
+                      clgt_rch,
+                      csar_rch,
                       d50m,
-                      order,
-                      logw_m,
-                      length_m,
+                      crsp_wsa,
+                      rch_lgtm,
                       res_time,
                       hz_exchng) %>% 
-  mutate(log_resp = log10(acm_resp)) %>% 
-  mutate(log_w_area = log10(wshd_area)) %>% 
-  mutate(log_d50m = log10(d50m)) %>% 
-  select(c(4:11)) %>% 
+  mutate(log.wsd_are = log(wsd_are,10),
+         log.frst = ifelse(frst==0,0,log(frst,10)),
+         log.clgt = log(clgt_rch,10),
+         log.csar = log(csar_rch,10),
+         log.d50m = log(d50m,10),
+         log.crsp = log(crsp_wsa,10),
+         log.rlgt = log(rch_lgtm,10),
+         log.rest = log(res_time,10),
+         log.hzex = log(hz_exchng,10)) %>% 
+  select(c(11:19)) %>% 
   ggpairs(lower = list(continuous = 
                          wrap(my_fn,
                               pts=list(size=0.1, colour="gray"), 
-                              smt=list(method="loess", se=F, size=1, colour="blue",span=0.8))))
-# paired_plot
+                              smt=list(method="loess", se=F, size=1, colour="blue",span=0.8))))        
+paired_plot
 # 
+
+####################################################### Jan 23 2023 #########################
 p <- ggplot(bgc_cln,aes(wshd_area,logw_m))+
   geom_point()+
   scale_x_log10()
@@ -161,7 +159,9 @@ paired_plot_b
 # let's explore relationships with continuous variables expressed as categories for 
 # easier visualization
 
-########Replacing section#############
+################################################################################
+# Calculating Quantiles
+
 
 #I'm going to try calculating the quantiles with Hmisc::cut2, which allows
 # for the inclusion of zeroes
@@ -176,15 +176,7 @@ bgc_cln <- bgc_cln %>%
   mutate(hze_cat = factor(Hmisc::cut2(hz_exchng, g = 8),labels = qlabel)) %>% 
   mutate(d50_cat = factor(Hmisc::cut2(log10(d50m), g = 8),labels = qlabel))
 
-bgc_clnt <- bgc_cln0 %>% 
-  select(wshd_area,
-         acm_resp,
-         hrt,
-         p_frt_t,
-         p_shb_t) %>%
-  mutate(ent_cat = factor(Hmisc::cut2(hrt, g = 8),labels = qlabel))
-  
-  
+
 # Creating a quasi-sequential color palette for discrete categories
 # Source: https://www.ibm.com/design/language/color/
 
@@ -206,9 +198,19 @@ minor_breaks <- rep(1:9, 21)*(10^rep(-10:10, each=9))
 
 # Landscape entropy and scaling
 
+# exploratory plot
+
+p <- ggplot(bgc_cln,aes(wsd_are,crsp_wsa, color = ent_cat))+
+  geom_point(alpha = 0.5)+
+  scale_x_log10()+
+  scale_y_log10()+
+  geom_abline(intercept = -3, slope = 1)+
+  facet_wrap(~ent_cat)
+p
+
 # Inset plot
-ent_quant_i <- ggplot(bgc_cln,aes(wshd_area,
-                                acm_resp,
+ent_quant_i <- ggplot(bgc_cln,aes(wsd_are,
+                                crsp_wsa,
                                 color=ent_cat))+
   geom_smooth(method="lm",fullrange = TRUE, alpha = 0.3)+
   scale_x_log10(breaks = breaks, 
@@ -233,8 +235,8 @@ ent_quant_i
 ent_ins <- ggplotGrob(ent_quant_i)
 
 # Main plot
-ent_quant <- ggplot(bgc_cln,aes(wshd_area,
-                                 acm_resp,
+ent_quant <- ggplot(bgc_cln,aes(wsd_are,
+                                 crsp_wsa,
                                  color=ent_cat))+
   geom_point(size = 2.5,aes(alpha = hrt))+
   # geom_smooth(method="lm",fullrange = TRUE, se=FALSE)+
