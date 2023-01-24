@@ -61,7 +61,51 @@ bgc_cln0 <- bgc_cln0[,2:ncol(bgc_cln0)]
 
 summary(bgc_cln0)
 
-bgc_cln <- na.exclude(bgc_cln0) # a drop of 1035 additional data points.
+# Son et al 2022 used a random forest model to fill in the prediction gaps due to 
+# lack of hyporheic residence time and exchange data. 
+
+# We will start comparing the scaling relationships across these two type of predictions
+# since the underlying process to each model is different. 
+
+# To do so, we will create a new variable that would help us to separate the two data sets
+# easily
+
+bgc_cln <- bgc_cln0 %>% 
+  mutate(model = ifelse(is.na(hz_exchng)==TRUE,"rff","rcm"))
+
+# Now, let's take a quick look at the scaling relationships that could be observed
+# through these data sets:
+
+# Exploratory plot Cumulative Watershed Function vs. Watershed Area
+
+# exploratory plot
+
+p <- ggplot(bgc_cln,aes(wsd_are,crsp_wsa, color = model))+
+  geom_point(alpha = 0.5)+
+  scale_x_log10()+
+  scale_y_log10()+
+  geom_abline(intercept = -3, slope = 1)+
+  facet_wrap(~model)
+p
+
+# At a first glance the overall behavior seems consistent across the two data sets, except
+# for the extremely low values (below 1-e-07) predicted by the random forest model.
+
+summary(filter(bgc_cln,model=="rff"))
+
+# We have zero values for cumulative watershed respiration. Let's check how many of them we have:
+length(filter(bgc_cln,crsp_wsa==0))
+
+# 51 in total. 
+
+#Let's try the exploratory plot again:
+p <- ggplot(filter(bgc_cln,crsp_wsa>0),aes(wsd_are,crsp_wsa, color = model))+
+  geom_point(alpha = 0.5)+
+  scale_x_log10()+
+  scale_y_log10()+
+  geom_abline(intercept = -3, slope = 1)+
+  facet_wrap(~model)
+p
 
 # The original data needs to be tidy up with respect to factor levels for land 
 # cover to make it into a long format
@@ -70,6 +114,8 @@ bgc_cln <- na.exclude(bgc_cln0) # a drop of 1035 additional data points.
 ################################################################################
 # Figures
 ################################################################################
+
+
 
 # Let's start with a quick pairs plot to have a glimpse of the relationships among
 # variables
