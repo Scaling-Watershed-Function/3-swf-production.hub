@@ -14,7 +14,7 @@
 # To run this code in macos it is necessary to install XQuartz from 
 #www.xquartz.org
 
-librarian::shelf(tidyr)
+librarian::shelf(tidyverse)
 set.seed(2703)
 
 #Data:
@@ -28,7 +28,6 @@ lgc_o <- read.csv("assets/data/220725_yrb_resp_vars_legacy.csv",stringsAsFactors
 spt_o <- read.csv("assets/data/230110_yrb_spatial_camp.csv", stringsAsFactors = TRUE)
 rsp_o <- read.csv("assets/data/230116_yrb_respt_vars.csv", stringsAsFactors = TRUE)
 hbc_o <- read.csv("assets/data/230117_yrb_hbgc_vars.csv", stringsAsFactors = TRUE)
-lnd_o <- read.csv("assets/data/230117_yrb_cmid_land_2011.csv",stringsAsFactors=TRUE)
 
 #lnd_o is the land use data used by Son et al., 2022a and 2022b to model inputs of 
 #DOC, NO3, and OD to the YR (Although the map in the figures uses NLDC-2016).
@@ -169,8 +168,16 @@ write.csv(spt_dat,"assets/data/230120_yrb_spt_dat.csv")
 
 ################################################################################
 ################################################################################
+# Scaling Analysis for Respiration Rates across the Willamette River Basin
+# DATA PREPARATION
+################################################################################
 
+#By : Francisco Guerrero
+#Data source: SWAT-NEXXS Model simulations (By Kyongho Son)
 
+# Data
+sdb_dat0 <- read.csv("assets/data/nhd_WM_streamdatabase_annual_resp_mass_01162023.csv")
 
+# Let's subset this data using the same variables contained in lnd_o
 
 
