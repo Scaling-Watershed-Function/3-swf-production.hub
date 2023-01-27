@@ -24,10 +24,10 @@ set.seed(2703)
 # PENDING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #values
-lgc_o <- read.csv("assets/data/220725_yrb_resp_vars_legacy.csv",stringsAsFactors = TRUE)
-spt_o <- read.csv("assets/data/230110_yrb_spatial_camp.csv", stringsAsFactors = TRUE)
-rsp_o <- read.csv("assets/data/230116_yrb_respt_vars.csv", stringsAsFactors = TRUE)
-hbc_o <- read.csv("assets/data/230117_yrb_hbgc_vars.csv", stringsAsFactors = TRUE)
+lgc_o <- read.csv("assets/data/raw/220725_yrb_resp_vars_legacy.csv",stringsAsFactors = TRUE)
+spt_o <- read.csv("assets/data/raw/230110_yrb_spatial_camp.csv", stringsAsFactors = TRUE)
+rsp_o <- read.csv("assets/data/raw/230116_yrb_respt_vars.csv", stringsAsFactors = TRUE)
+hbc_o <- read.csv("assets/data/raw/230117_yrb_hbgc_vars.csv", stringsAsFactors = TRUE)
 
 #lnd_o is the land use data used by Son et al., 2022a and 2022b to model inputs of 
 #DOC, NO3, and OD to the YR (Although the map in the figures uses NLDC-2016).
@@ -163,8 +163,8 @@ p
 
 # Let's now save these data sets for further analysis.
 
-write.csv(rsp_dat,"assets/data/230120_yrb_rsp_dat.csv")
-write.csv(spt_dat,"assets/data/230120_yrb_spt_dat.csv")
+write.csv(rsp_dat,"assets/data/processed/230120_yrb_rsp_dat.csv")
+write.csv(spt_dat,"assets/data/processed/230120_yrb_spt_dat.csv")
 
 ################################################################################
 ################################################################################
@@ -176,8 +176,56 @@ write.csv(spt_dat,"assets/data/230120_yrb_spt_dat.csv")
 #Data source: SWAT-NEXXS Model simulations (By Kyongho Son)
 
 # Data
-sdb_dat0 <- read.csv("assets/data/nhd_WM_streamdatabase_annual_resp_mass_01162023.csv")
+sdb_dat0 <- read.csv("assets/data/raw/nhd_WM_streamdatabase_annual_resp_mass_01162023.csv")
 
-# Let's subset this data using the same variables contained in lnd_o
+# Let's subset this data using the same variables contained in the land use data set for 
+# the Yakima River Basin
+
+w_lnd <- sdb_dat0 %>% select(COMID,
+                             urban,
+                             forest,
+                             wetland,
+                             agrc,
+                             shrub,
+                             turban,
+                             tforest,
+                             twetland,
+                             tagrc,
+                             tshrub)
+
+# Let's rename the variables for consistency across data sets
+
+w_lnd <- rename(w_lnd,
+              comid = COMID,
+              urbn = urban,
+              frst = forest,
+              wtnd = wetland, 
+              shrb = shrub,
+              urbn_t = turban,
+              frst_t = tforest,
+              wtnd_t = twetland,
+              agrc_t = tagrc,
+              shrb_t = tshrub)
+
+# Saving as csv file
+write.csv(w_lnd,"assets/data/processed/230126_wlm_lndu_dat.csv")
+
+################################################################################
+# Hydro-Biogeochemical data
+################################################################################
+
+# NEXSS Model input/output data
+inp_dat <- read.csv("assets/data/raw/model_resp_annual_wm_input_output_df_01_16_2023.csv")
+
+# Cummulative Respiration data
+w_rsp_dat <- read.csv("assets/data/raw/cum_resp_WM_mass_data_0116_2023.csv")
+
+# Merging into a single data set
+wlm_dat0 <- unique(merge(w_rsp_dat,inp_dat,by="COMID"))
+
+# Defining variables to keep
+
+bgc_cln0 <- read.csv("assets/data/processed/230123_scaling_lnd_bgc.csv", 
+                     stringsAsFactors=TRUE)
 
 
