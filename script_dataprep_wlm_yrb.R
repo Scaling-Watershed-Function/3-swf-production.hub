@@ -45,7 +45,7 @@ wlm_hbc_i <- read.csv("assets/data/raw/model_resp_annual_wm_input_output_df_01_1
 
 #The data from the Willamette River Basin were provided by K. Son in different 
 #spreadsheets and organization compared to the YRB. We are going to start by
-#reorganizing these data sets such that we could easily bind them with the YRB
+#reorganizing these data sets so that we could easily bind them with the YRB
 #data sets.
 
 #First, let's take a look into the column names for the respiration data from 
@@ -67,9 +67,67 @@ glimpse(wlm_rsp_i)
 glimpse(wlm_hbc_o)
 glimpse(wlm_hbc_i)
 
-p <- ggplot(wlm_hbc_i,aes(TotDASqKM,logDA_km2))+
-  geom_point()
+#Let's pull the needed columns from each dataset
+
+wlm_hbc_om <- dplyr::select(wlm_hbc_o,COMID,CAT_STREAM_SLOPE,TOT_STREAM_SLOPE,TOT_BASIN_AREA)
+wlm_hbc_im <- dplyr::select(wlm_hbc_i,COMID,TotDASqKM,length_m)
+wlm_rsp_om <- dplyr::select(wlm_rsp_o,COMID,FromNode,ToNode,cum_totco2g_day,cum_stream_area_m2,
+                            cum_stream_length_m, cum_totco2g_day_Tdrain_m2, cum_totco2g_day_Tsurface_m2)
+wlm_rsp_im <- dplyr::select(wlm_rsp_i,COMID,totco2g_day_fill,pred_stream_area_m2_fill,stream_length_m)
+
+#Since merge only takes two inputs at a time, we have to merge our datasets sequentially
+wlm_hbc_mg <- unique(merge(wlm_hbc_om,wlm_hbc_im,by = "COMID"))
+wlm_rsp_mg <- unique(merge(wlm_rsp_om,wlm_rsp_im,by = "COMID"))
+wlm_rsp_mg0 <- unique(merge(wlm_hbc_mg,wlm_rsp_mg,by="COMID"))
+wlm_rsp_mg0$pred_logw_m <- log((wlm_rsp_mg0$pred_stream_area_m2_fill/wlm_rsp_mg0$stream_length_m),10)
+
+#We will now reorganize columns to bind the YRM and WLM datasets
+yrb_rsp_m1 <- dplyr::select(yrb_rsp_o, 
+                            COMID, 
+                            FromNode,
+                            ToNode,
+                            TOT_BASIN_AREA,
+                            stream_length_m,
+                            pred_logw_m,
+                            pred_stream_area_m2_fill,
+                            cum_stream_length_m,
+                            cum_stream_area_m2,
+                            cum_totco2g_day,
+                            cum_totco2g_day_Tsurface_m2,
+                            cum_totco2g_day_Tdrain_m2)
+
+wlm_rsp_m1 <- dplyr::select(wlm_rsp_mg0,
+                            COMID, 
+                            FromNode,
+                            ToNode,
+                            TOT_BASIN_AREA,
+                            stream_length_m,
+                            pred_logw_m,
+                            pred_stream_area_m2_fill,
+                            cum_stream_length_m,
+                            cum_stream_area_m2,
+                            cum_totco2g_day,
+                            cum_totco2g_day_Tsurface_m2,
+                            cum_totco2g_day_Tdrain_m2)
+
+yrb_rsp_m1$basin <- "Yakima"
+wlm_rsp_m1$basin <- "Willamette"
+
+scl_rsp <- rbind(yrb_rsp_m1,wlm_rsp_m1)
+
+#Test plot
+
+p <- ggplot(na.omit(scl_rsp),aes(TOT_BASIN_AREA,cum_totco2g_day_Tdrain_m2,color = basin))+
+  geom_point(alpha = 0.35)+
+  scale_x_log10()+
+  scale_y_log10()+
+  facet_wrap(~basin, ncol = 2)
 p
+
+#Let's make sure that the log-transformed values, do correspond with the
+#linear scale values (a previous inspection showed otherwise)
+
+wlm_hbc_i$logDA_km2 = log(wlm_hbc_i$TotDASqKM,10)
 
 #We will have to paste together columns from both datasets in different orders
 
