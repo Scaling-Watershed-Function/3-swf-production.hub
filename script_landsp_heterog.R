@@ -20,8 +20,8 @@ librarian::shelf(tidyverse,#(includes ggplot2, readr, dplyr, tidyr, and more...)
 set.seed(2703)
 
 #Data:
-dat_o <- read.csv("assets/data/230120_yrb_rsp_dat.csv",stringsAsFactors = TRUE)
-lnd_o <- read.csv("assets/data/230117_yrb_cmid_land_2011.csv",stringsAsFactors=TRUE)
+dat_o <- read.csv("assets/data/raw/230120_yrb_rsp_dat.csv",stringsAsFactors = TRUE)
+lnd_o <- read.csv("assets/data/raw/230117_yrb_cmid_land_2011.csv",stringsAsFactors=TRUE)
 
 # Processing land cover data
 
