@@ -3,6 +3,8 @@
 # Basins
 # DATA PREPARATION
 ###############################################################################
+# RESPIRATION DATA
+###############################################################################
 
 #By : Francisco Guerrero
 #Data source: SWAT-NEXXS Model simulations (By Kyongho Son)
@@ -15,24 +17,32 @@
 #To run this code in macOS it is necessary to install XQuartz from 
 #www.xquartz.org
 
-librarian::shelf(tidyverse)
+librarian::shelf(tidyverse, GGally)
 set.seed(2703)
 
 # Data:
 
 #values
 
-#Yakima River Basin
+#Yakima River Basin (yrb)
 yrb_lgc_o <- read.csv("assets/data/raw/220725_yrb_resp_vars_legacy.csv",
-                      stringsAsFactors = TRUE)
+                      stringsAsFactors = TRUE) #Dataset used for the AGU poster with uncorrected cumulative values
+#i.e. respiration rates were not normalized by watershed area)
 yrb_spt_o <- read.csv("assets/data/raw/230110_yrb_spatial_camp.csv", 
-                      stringsAsFactors = TRUE)
+                      stringsAsFactors = TRUE) #Predicted respiration rates at field locations
 yrb_rsp_o <- read.csv("assets/data/raw/230116_yrb_respt_vars.csv", 
-                      stringsAsFactors = TRUE)
+                      stringsAsFactors = TRUE) #Updated dataset with corrected cumulative values
 yrb_hbc_o <- read.csv("assets/data/raw/230117_yrb_hbgc_vars.csv", 
-                      stringsAsFactors = TRUE)
+                      stringsAsFactors = TRUE) #Hydro-biogeochemical variables (including residence
+#time and hyporheic exchange)
 
-#Willamette River Basin
+#Willamette River Basin (wlm)
+
+#Unlike the yrb datasets, the wlm datasets for both respiration (rsp) and hydro-biogeochemical 
+#variables (hbc) are split into two different datasets. To keep the naming across datasets
+#consistent, I'm using "_o" for original and "_i" as a sequential index for other raw datasets
+#that would be merged under the labels "rsp" or "hbc".
+
 wlm_rsp_o <- read.csv("assets/data/raw/cum_resp_WM_mass_data_0116_2023.csv", 
                       stringsAsFactors = TRUE)
 wlm_rsp_i <- read.csv("assets/data/raw/model_resp_wm_rf0116.csv", stringsAsFactors = TRUE)
@@ -67,7 +77,8 @@ glimpse(wlm_rsp_i)
 glimpse(wlm_hbc_o)
 glimpse(wlm_hbc_i)
 
-#Let's pull the needed columns from each dataset
+#Let's pull the needed columns from each dataset (adding "m" at the end for "merging" within
+#the same basin)
 
 wlm_hbc_om <- dplyr::select(wlm_hbc_o,COMID,CAT_STREAM_SLOPE,TOT_STREAM_SLOPE,TOT_BASIN_AREA)
 wlm_hbc_im <- dplyr::select(wlm_hbc_i,COMID,TotDASqKM,length_m)
@@ -78,7 +89,7 @@ wlm_rsp_im <- dplyr::select(wlm_rsp_i,COMID,totco2g_day_fill,pred_stream_area_m2
 #Since merge only takes two inputs at a time, we have to merge our datasets sequentially
 wlm_hbc_mg <- unique(merge(wlm_hbc_om,wlm_hbc_im,by = "COMID"))
 wlm_rsp_mg <- unique(merge(wlm_rsp_om,wlm_rsp_im,by = "COMID"))
-wlm_rsp_mg0 <- unique(merge(wlm_hbc_mg,wlm_rsp_mg,by="COMID"))
+wlm_rsp_mg0 <- unique(merge(wlm_rsp_mg,wlm_hbc_mg,by="COMID"))
 wlm_rsp_mg0$pred_logw_m <- log((wlm_rsp_mg0$pred_stream_area_m2_fill/wlm_rsp_mg0$stream_length_m),10)
 
 #We will now reorganize columns to bind the YRM and WLM datasets
@@ -113,27 +124,133 @@ wlm_rsp_m1 <- dplyr::select(wlm_rsp_mg0,
 yrb_rsp_m1$basin <- "Yakima"
 wlm_rsp_m1$basin <- "Willamette"
 
-scl_rsp <- rbind(yrb_rsp_m1,wlm_rsp_m1)
+#Merging with additional hydro-biogeochemical data for both watersheds
+
+yrb_hbc_m1 <- select(yrb_hbc_o,
+                     COMID,
+                     StreamOrde,
+                     logQ_m3_div_s,
+                     logwbkf_m,
+                     logd_m,
+                     logdbkf_m,
+                     D50_m,
+                     pred_annual_DOC,
+                     pred_annual_DO,
+                     no3_conc_mg_l,
+                     logRT_total_hz_s,
+                     logq_hz_total_m_s)
+
+wlm_hbc_m1 <- select(wlm_hbc_i,
+                     COMID,
+                     StreamOrde,
+                     logQ_m3_div_s,
+                     logwbkf_m,
+                     logd_m,
+                     logdbkf_m,
+                     D50_m,
+                     pred_annual_DOC,
+                     pred_annual_DO,
+                     no3_conc_mg_l,
+                     logRT_total_hz_s,
+                     logq_hz_total_m_s)
+
+yrb_rsp_m2 <- unique(merge(yrb_rsp_m1,yrb_hbc_m1,by = "COMID"))
+wlm_rsp_m2 <- unique(merge(wlm_rsp_m1,wlm_hbc_m1,by = "COMID"))
+
+scl_rsp <- rbind(yrb_rsp_m2,wlm_rsp_m2)
 
 #Test plot
 
-p <- ggplot(na.omit(scl_rsp),aes(TOT_BASIN_AREA,cum_totco2g_day_Tdrain_m2,color = basin))+
+p0 <- ggplot(scl_rsp,aes(TOT_BASIN_AREA,cum_totco2g_day_Tdrain_m2,color = basin))+
   geom_point(alpha = 0.35)+
   scale_x_log10()+
   scale_y_log10()+
+  geom_abline(slope = 0.5, intercept =-4.25,linetype = "dashed")+
+  geom_abline(slope = 1, intercept =-3,linetype = "solid")+
+  geom_abline(slope = 1.5, intercept =-1.75,linetype = "dashed")+
   facet_wrap(~basin, ncol = 2)
-p
+p0
 
-#Let's make sure that the log-transformed values, do correspond with the
-#linear scale values (a previous inspection showed otherwise)
+#We observe zero values for cumulative respiration in both datasets for at least a couple
+#orders of magnitude (~0.1 - 1 km2) of total watershed area. Let's take a look at those:
 
-wlm_hbc_i$logDA_km2 = log(wlm_hbc_i$TotDASqKM,10)
+nrow(filter(scl_rsp,cum_totco2g_day_Tdrain_m2==0))
 
-#We will have to paste together columns from both datasets in different orders
+# 253 values
 
-wlm_rsp_1 <- cbind(wlm_rsp_o[,1:3],wlm_hbc_o[,c(1,5,7)])
+#Let's use our test plot again, this time after removing zero values: 
+
+p1 <- ggplot(filter(scl_rsp, cum_totco2g_day_Tdrain_m2 > 0),
+            aes(TOT_BASIN_AREA,cum_totco2g_day_Tdrain_m2,color = basin))+
+  geom_point(alpha = 0.35)+
+  scale_x_log10()+
+  scale_y_log10()+
+  geom_abline(slope = 0.5, intercept =-4.25,linetype = "dashed")+
+  geom_abline(slope = 1, intercept =-3,linetype = "solid")+
+  geom_abline(slope = 1.5, intercept =-1.75,linetype = "dashed")+
+  facet_wrap(~basin, ncol = 2)
+p1
+
+#We observe that cumulative watershed function deviates from a scaling relation-
+#ship at larger watersheds. This needs to be explored further.
 
 
-# header info
+#Let's also take a look at the scaling relationships between stream length and 
+#surface area, with watershed area
+
+scl_rsp %>% select(COMID,
+                   basin,
+                   TOT_BASIN_AREA,
+                   cum_stream_area_m2,
+                   cum_stream_length_m) %>% 
+  gather(key = "variable",value = "value",c(4:5),factor_key = TRUE) %>% 
+  ggplot(aes(TOT_BASIN_AREA,value,color=variable))+
+  geom_smooth(method = "lm")+
+  scale_x_log10()+
+  scale_y_log10()+
+  geom_abline(slope = 1, intercept = 2.95, linetype = "dashed")+
+  facet_wrap(~basin,ncol = 2)
+  
+#In both the Willamette and Yakima River basins, the cumulative stream length scales
+#linearly with watershed area, while cumulative stream area scales superlinearly (scaling
+#exponent >1. Reference dashed line has a scaling exponent = 1).
+
+#Lastly, let's take a look at potential correlations among physical variables. This could 
+#illuminate ways in which we could approach gap filling (if needed)
+
+scl_rsp %>% select(COMID,
+                   basin,
+                   TOT_BASIN_AREA,
+                   pred_stream_area_m2_fill,
+                   StreamOrde,
+                   logQ_m3_div_s,
+                   D50_m,
+                   logRT_total_hz_s,
+                   logq_hz_total_m_s) %>%
+  mutate(logwsd_are = log(TOT_BASIN_AREA,10),
+         logstm_are = log(pred_stream_area_m2_fill,10),
+         logd50_m = log(D50_m,10),
+         logq_m3 = logQ_m3_div_s,10) %>% 
+  ggpairs(columns = 8:12,
+          aes(color = basin ,alpha = 0.05))
+  
+
+################################################################################
+# LAND USE DATA
+################################################################################
+
+
+
+
+
+################################################################################
+# HEADER INFO
+################################################################################
 
 #PENDING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
+
