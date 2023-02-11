@@ -15,7 +15,7 @@
 #www.xquartz.org
 
 librarian::shelf(tidyverse,#(includes ggplot2, readr, dplyr, tidyr, and more...)
-                 entropy)
+                 entropy, usethis)
 
 set.seed(2703)
 
