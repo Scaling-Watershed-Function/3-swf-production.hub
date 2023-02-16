@@ -165,14 +165,24 @@ yrb_wlm_rsp <- rbind(yrb_rsp_m2,wlm_rsp_m2)
 
 #Test plot
 
-p0 <- ggplot(yrb_wlm_rsp,aes(TOT_BASIN_AREA,cum_totco2g_day_Tdrain_m2,color = basin))+
-  geom_point(alpha = 0.35)+
+p0 <- ggplot(yrb_wlm_rsp,
+             aes(TOT_BASIN_AREA,
+                 cum_totco2g_day_Tdrain_m2))+
+  geom_point(alpha = 0.35, color = "gray")+
+  geom_point(data = na.omit(yrb_wlm_rsp),
+             aes(TOT_BASIN_AREA,
+                 cum_totco2g_day_Tdrain_m2,
+                 color = basin),
+             alpha = 0.35)+
   scale_x_log10()+
   scale_y_log10()+
-  geom_abline(slope = 0.5, intercept =-4.25,linetype = "dashed")+
-  geom_abline(slope = 1, intercept =-3,linetype = "solid")+
-  geom_abline(slope = 1.5, intercept =-1.75,linetype = "dashed")+
-  facet_wrap(~basin, ncol = 2)
+  geom_abline(slope = 1, intercept = -2.5)+
+  # geom_abline(slope = 0.5, intercept =-4.25,linetype = "dashed")+
+  # geom_abline(slope = 1, intercept =-3,linetype = "solid")+
+  # geom_abline(slope = 1.5, intercept =-1.75,linetype = "dashed")+
+  facet_wrap(~basin, 
+             ncol = 2)+
+  ggtitle("Total Cumulative Respiration per Day per Square Meter of Watershed Area")
 p0
 
 #We observe zero values for cumulative respiration in both datasets for at least a couple
@@ -208,12 +218,14 @@ yrb_wlm_rsp %>% select(COMID,
                    cum_stream_area_m2,
                    cum_stream_length_m) %>% 
   gather(key = "variable",value = "value",c(4:5),factor_key = TRUE) %>% 
-  ggplot(aes(TOT_BASIN_AREA,value,color=variable))+
-  geom_smooth(method = "lm")+
+  ggplot(aes(TOT_BASIN_AREA,value,color=variable, fill = variable))+
+  # geom_smooth(method = "lm")+
+  # geom_hex()+
+  geom_point(alpha = 0.35)+
   scale_x_log10()+
   scale_y_log10()+
   geom_abline(slope = 1, intercept = 2.95, linetype = "dashed")+
-  facet_wrap(~basin,ncol = 2)
+  facet_wrap(variable~basin,ncol = 2)
   
 #In both the Willamette and Yakima River basins, the cumulative stream length scales
 #linearly with watershed area, while cumulative stream area scales superlinearly (scaling
@@ -222,7 +234,7 @@ yrb_wlm_rsp %>% select(COMID,
 #Lastly, let's take a look at potential correlations among physical variables. This could 
 #illuminate ways in which we could approach gap filling (if needed)
 
-yrb_wlm_rsp %>% select(COMID,
+yrb_wlm_rsp %>% na.omit(yrb_wlm_rsp) %>% select(COMID,
                    basin,
                    TOT_BASIN_AREA,
                    pred_stream_area_m2_fill,
