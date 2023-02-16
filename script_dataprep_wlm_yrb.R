@@ -167,9 +167,9 @@ yrb_wlm_rsp <- rbind(yrb_rsp_m2,wlm_rsp_m2)
 
 p0 <- ggplot(yrb_wlm_rsp,
              aes(TOT_BASIN_AREA,
-                 cum_totco2g_day_Tdrain_m2))+
+                 cum_totco2g_day_Tdrain_m2))+ 
   geom_point(alpha = 0.35, color = "gray")+
-  geom_point(data = na.omit(yrb_wlm_rsp),
+  geom_point(data = na.omit(yrb_wlm_rsp),# Excluding RF-generated data  (in gray color)
              aes(TOT_BASIN_AREA,
                  cum_totco2g_day_Tdrain_m2,
                  color = basin),
