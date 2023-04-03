@@ -58,10 +58,7 @@ librarian::shelf(plyr, tidytext, tidyverse,
 ### Our data.
 
 ```{r}
-# t_df <- read_csv("your_lit_review_file.csv", show_col_types=FALSE)
-assets_pubs <- "../1-swf-knowledge.base/assets/data/raw" 
-t_df <- as_tibble(read_csv(paste(assets_pubs,"230321_research_rabbit_scaling_pubs.csv",sep='/'),show_col_types = FALSE))
-t_df
+t_df <- read_csv("your_lit_review_file.csv", show_col_types=FALSE)
 ```
 
 For our analyses below, we won't need DOIs, PMIDs or arXiv IDs. We will focus on Title, Abstract, Authors, Journal, Year. To keep column names formatting simple, I use lowercase and spaces are added with (\_) when needed.
@@ -77,10 +74,8 @@ t_df_c <- t_df %>%
          journal = Journal,
          year = Year) %>% 
   mutate(abstract_lenght = nchar(abstract)) %>% 
-  filter(abstract_lenght > 20)
-
-t_df_c <- t_df_c%>% 
-  mutate(id = seq(from =1, to= nrow(t_df_c),by=1)) %>% 
+  filter(abstract_lenght > 20) %>% 
+  mutate(id = seq(from =1, to= nrow(.),by=1)) %>% 
   mutate(id = factor(id))
 
 t_df_c
@@ -94,33 +89,25 @@ How to unnest and nest text data in using tidytext? check this post: https://sta
 
 #### Choosing analysis level
 
-You can choose the publication component (pub_comp) you want to focus your analysis on. In this case, our options are title or abstract
+You can choose the publication component (pub_comp) you want to focus your analysis on. In this case, our options are title or abstract. We will start with titles.
 
 ```{r}
 pub_comp = "title"
+```
 
-# Preparing the data
+#### Preparing the data
 
-pub_comp_c <- select(t_df_c,all_of(!!paste(pub_comp))) %>%
-  rename(pub_comp_words = pub_comp) %>% 
+```{r}
+pub_dat<- dplyr::select(t_df_c, id, authors, year, journal, all_of(pub_comp)) %>%
+  rename(pub_comp_words = all_of(pub_comp)) %>% 
   unnest_tokens(output = word, input = pub_comp_words, drop = FALSE) %>% 
-  rowwise() %>% mutate(word = tolower(word)) %>% 
-  rowwise() %>% mutate(word = if_else(word == "data","data",singularize(word))) %>%  
+  mutate(word = str_to_lower(word),
+         word = singularize(word)) %>%  
   filter(!str_detect(word, "[:punct:]|[:digit:]")) %>% 
-  filter(!word %in% c(stop_words$word)) %>% 
-  nest(word) %>% 
-  mutate(!!paste0(pub_comp) := map_chr(map(data, unlist), paste, collapse = " "))
-  
-# Combining our original data frames for text analysis
-
-t_df_c_m <- t_df_c %>% 
-  select(year,authors,journal)
-
-pub_comp_m <- select(pub_comp_c,!!paste0(pub_comp))
-
-pub_dat <- as_tibble(cbind(pub_comp_m,t_df_c_m))
-
-pub_dat
+  anti_join(stop_words, by = "word") %>% 
+  nest(data = word) %>% 
+  mutate(!!paste0(pub_comp) := map_chr(map(data, unlist), paste, collapse = " ")) %>% 
+  select(-c(pub_comp_words,data))
 ```
 
 #### Tokenization
