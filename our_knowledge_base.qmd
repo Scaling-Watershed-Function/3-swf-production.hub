@@ -46,7 +46,7 @@ If you have never used librarian, run this first line of code:
 
 What librarian does is to call for packages within our library and if it cannot find them, it install these packages in your library and call them into your current environment.
 
-```{r}
+```{r message=FALSE}
 require(librarian)
 librarian::shelf(plyr, tidytext, tidyverse,
                  widyr,igraph, ggraph,
@@ -58,7 +58,10 @@ librarian::shelf(plyr, tidytext, tidyverse,
 ### Our data.
 
 ```{r}
-t_df <- read_csv("your_lit_review_file.csv", show_col_types=FALSE)
+# t_df <- read_csv("your_lit_review_file.csv", show_col_types=FALSE)
+assets_pubs <- "../1-swf-knowledge.base/assets/data/raw" 
+t_df <- as_tibble(read_csv(paste(assets_pubs,"230330_scaling_hbgc_zotero.csv",sep='/'),show_col_types = FALSE))
+t_df
 ```
 
 For our analyses below, we won't need DOIs, PMIDs or arXiv IDs. We will focus on Title, Abstract, Authors, Journal, Year. To keep column names formatting simple, I use lowercase and spaces are added with (\_) when needed.
