@@ -4,3 +4,6 @@
 .Ruserdata
 .Rhistory
 *.icloud
+.DS_Store
+scaling_results_interpretation/.DS_Store
+scaling_results_interpretation/scripts/.DS_Store
