@@ -30,7 +30,7 @@ The following plots illustrate the draft storyline for our publication:![](image
 
 ### Local respiration rates are positively correlated with watershed area except in larger streams
 
-![](images/guerrero_etal_23_scaling_local_respiration_rates.png)
+![](https://raw.githubusercontent.com/Scaling-Watershed-Function/2-swf-analytical.engine/main/scaling_analysis_willamette_yakima/results/guerrero_etal_23_scaling_local_respiration_rates.svg)
 ## AGU ABSTRACT
 
 Function Follows Form: Heterogeneity in Ecosystem Structure Constraints Watershed-Scale Sediment Respiration in Two Contrasting Watersheds in the Pacific Northweast, U.S. Francisco J J. Guerrero1, Peter Regier2, Kyongho Son3, Xingyuan Chen3, Yilin Fang4, Wilfred M Wollheim5, James Stegen3 and Timothy D Scheibe3, (1)Oregon State University, Corvallis, OR, United States, (2)Pacific Northwest National Laboratory, Richland, WA, United States, (3)Pacific Northwest National Laboratory, Richland, United States, (4)Battelle, Pacific Northwest National Laboratory, Richland, WA, United States, (5)Univ New Hampshire, Durham, NH, United States
