@@ -1,0 +1,13 @@
+project:
+  title: "results_interpretation"
+
+editor: visual
+
+format:
+  html:
+    embed-resources: true
+    theme: 
+      light: cosmo
+      dark: darkly
+    css: styles.css
+    toc: true

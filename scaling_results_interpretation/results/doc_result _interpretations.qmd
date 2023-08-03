@@ -30,6 +30,29 @@ The following plots illustrate the draft storyline for our publication:
 
 ### Stream Surface Area Scales Superlinearly with watershed area
 
+
+```{r, results='asis'}
+# Load the htmltools library
+library(htmltools)
+
+# URL of the HTML file (replace with your actual URL)
+html_url <- "https://raw.githubusercontent.com/Scaling-Watershed-Function/2-swf-analytical.engine/main/scaling_analysis_willamette_yakima/results/TEST.html"
+
+
+# Create the iframe HTML code as a character string
+iframe_code <- paste0(
+  "<iframe src=\"", html_url, "\"",
+  " style=\"width: 100%; height: 500px;\"></iframe>")
+```
+
+```{=html}
+<iframe src="https://raw.githubusercontent.com/Scaling-Watershed-Function/2-swf-analytical.engine/main/scaling_analysis_willamette_yakima/results/TEST.html" style="width: 100%; height: 500px;"></iframe>
+```
+
+
+
+
+
 ![Superlinear scaling of stream surface area with watershed area in the Willamette and Yakima River Basins. \*Confidence intervals around the scaling exponents exclude 1](images/guerrero_etal_23_stream_sa_scaling.png){fig-alt="A scatter plot of stream surface area versus watershed area in two rivers within the Columbia River Basin"}
 
 ### Local respiration rates are positively correlated with watershed area except in larger streams
@@ -46,12 +69,9 @@ The following plots illustrate the draft storyline for our publication:
 
 ## AGU ABSTRACT
 
-Function Follows Form: Heterogeneity in Ecosystem Structure Constraints Watershed-Scale Sediment Respiration in Two Contrasting Watersheds in the Pacific Northweast, U.S.
-Francisco J J. Guerrero1, Peter Regier2, Kyongho Son3, Xingyuan Chen3, Yilin Fang4, Wilfred M Wollheim5, James Stegen3 and Timothy D Scheibe3, (1)Oregon State University, Corvallis, OR, United States, (2)Pacific Northwest National Laboratory, Richland, WA, United States, (3)Pacific Northwest National Laboratory, Richland, United States, (4)Battelle, Pacific Northwest National Laboratory, Richland, WA, United States, (5)Univ New Hampshire, Durham, NH, United States
+Function Follows Form: Heterogeneity in Ecosystem Structure Constraints Watershed-Scale Sediment Respiration in Two Contrasting Watersheds in the Pacific Northweast, U.S. Francisco J J. Guerrero1, Peter Regier2, Kyongho Son3, Xingyuan Chen3, Yilin Fang4, Wilfred M Wollheim5, James Stegen3 and Timothy D Scheibe3, (1)Oregon State University, Corvallis, OR, United States, (2)Pacific Northwest National Laboratory, Richland, WA, United States, (3)Pacific Northwest National Laboratory, Richland, United States, (4)Battelle, Pacific Northwest National Laboratory, Richland, WA, United States, (5)Univ New Hampshire, Durham, NH, United States
 
-Abstract Text:
-Disruptions such as fires, floods, or land use changes can significantly impair watershed function on multiple scales. This study expands upon the allometric scaling theory of watershed function to enhance our understanding of the variables driving Whole-Watershed-Scale (WWS) sediment respiration rates in two watersheds within the Pacific Northwest: the Willamette and Yakima River Basins. These watersheds provide contrasting examples in terms of landscape heterogeneity and hydrological regimes within the broader Columbia River Basin.
-By using reach-scale predictions of sediment respiration from a coupled hydrobiogeochemical model (the River Corridor Model-RCM), we quantified the total carbon respired by sediments (i.e., cumulative respiration) across multiple nested basins within the boundaries of the Willamette and Yakima watersheds. We subsequently investigated whether these cumulative respiration rates exhibit allometric scaling with watershed area, as suggested by recent theoretical developments.
+Abstract Text: Disruptions such as fires, floods, or land use changes can significantly impair watershed function on multiple scales. This study expands upon the allometric scaling theory of watershed function to enhance our understanding of the variables driving Whole-Watershed-Scale (WWS) sediment respiration rates in two watersheds within the Pacific Northwest: the Willamette and Yakima River Basins. These watersheds provide contrasting examples in terms of landscape heterogeneity and hydrological regimes within the broader Columbia River Basin. By using reach-scale predictions of sediment respiration from a coupled hydrobiogeochemical model (the River Corridor Model-RCM), we quantified the total carbon respired by sediments (i.e., cumulative respiration) across multiple nested basins within the boundaries of the Willamette and Yakima watersheds. We subsequently investigated whether these cumulative respiration rates exhibit allometric scaling with watershed area, as suggested by recent theoretical developments.
 
 Contrary to the theoretical prediction of a superlinear scaling of total carbon respiration in the sediments with watershed area (implying larger watersheds would have disproportionately high sediment respiration rates relative to their size), we discovered multiple allometric scaling behaviors constrained by sublinear scaling (indicating larger watersheds' sediment respiration is disproportionately low relative to their size). WWS sediment respiration increases with watershed area from first to fifth-order streams, but decreases in higher-order streams.
 
@@ -59,6 +79,4 @@ Our results suggest these patterns are strongly influenced by heterogeneity in w
 
 The implications of our findings are twofold. First, under a sublinear scaling scenario, we should anticipate particularly crucial regions within a watershed where disturbance impacts could disrupt WWS metabolic processes. Second, if form informs (metabolic) function, the biogeochemical resilience of fluvial ecosystems to disturbances could be lower than previously expected.
 
-
-Plain-Language Summary:
-Watersheds, like the Willamette and Yakima River Basins in the Pacific Northwest, absorb and process water. However, events such as fires, floods, or changes in land use can disrupt their functioning. Our study focuses on "sediment respiration", which is how microorganisms in the river bed release carbon dioxide. We used a computer model to predict sediment respiration changes across these watersheds. Initially, we thought larger watersheds would exhibit more sediment respiration. However, our findings showed respiration increasing from smaller streams to mid-sized streams, to then decrease in larger ones. We believe variations in water and nutrients across the watershed might cause this. These variations differ between the Willamette and Yakima Basins. Our study is important for two reasons. First, it highlights the specific regions in a watershed most likely to be impacted by disruptions. Second, it suggests that watersheds may be less resilient to such disruptions than we previously assumed. This understanding can guide future efforts to protect and manage our watersheds, which are vital for maintaining the health of our ecosystems.
+Plain-Language Summary: Watersheds, like the Willamette and Yakima River Basins in the Pacific Northwest, absorb and process water. However, events such as fires, floods, or changes in land use can disrupt their functioning. Our study focuses on "sediment respiration", which is how microorganisms in the river bed release carbon dioxide. We used a computer model to predict sediment respiration changes across these watersheds. Initially, we thought larger watersheds would exhibit more sediment respiration. However, our findings showed respiration increasing from smaller streams to mid-sized streams, to then decrease in larger ones. We believe variations in water and nutrients across the watershed might cause this. These variations differ between the Willamette and Yakima Basins. Our study is important for two reasons. First, it highlights the specific regions in a watershed most likely to be impacted by disruptions. Second, it suggests that watersheds may be less resilient to such disruptions than we previously assumed. This understanding can guide future efforts to protect and manage our watersheds, which are vital for maintaining the health of our ecosystems.

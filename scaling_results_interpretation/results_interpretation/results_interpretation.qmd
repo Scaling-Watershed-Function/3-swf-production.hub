@@ -1,0 +1,33 @@
+---
+title: "Results: Scaling Watershed Function"
+author: "Francisco J. Guerrero, et al."
+format: html
+editor: source
+---
+
+## Scaling sediment respiration in the Willamette and Yakima River Basins
+
+In this project we built on Wollheim et al.,'s contribution on [superlinear scaling of watershed function in stream networks](https://www.nature.com/articles/s41467-022-28630-z#:~:text=Superlinear%20scaling%20of%20cumulative%20biogeochemical,rivers%20within%20the%20Earth%20system.). Wil gave a presentation at PNNL and a pdf of the slide deck is available [here](https://github.com/Scaling-Watershed-Function/1-swf-knowledge.base/blob/main/visual_assets/4_seminars_presentations/wollheim_23_pnnl_scaling_seminar.pdf). The driving question is to estimate the contribution of river networks to the global carbon cycle. To do so, we need to be able to estimate the total cumulative functions leading to CO2 emissions/sinks, that is, respiration, gross primary productivity.
+
+Building on metabolic theory, it can be hypothesized that the total metabolic function of a stream network is function of its size (\~watershed area). This function is a power law , which is characterized by scaling exponents. If the scaling exponent of cumulative function vs. watershed area is equal to one, we talk about **isometric** scaling, that is, function increases in direct proportion to size. If the scaling exponent is different from 1, we talk about **allometric** scaling, that is the changes in function can be larger or smaller than expected from network size. In the first case, we are talking about **superlinear** scaling, and in the later about **sublinear** scaling. For instance, it has been found that while the human heart scales linearly (isometric) with body size, the brain size scales sublinearly (allometrically) with body size (more [here](https://www.nature.com/scitable/knowledge/library/allometry-the-study-of-biological-scaling-13228439/)).
+
+So, what Wollheim and co-workers show in their paper is:
+
+"We demonstrate **allometric scaling** \[actually, superlinear\] assuming spatially homogenous inputs of water (i.e., runoff; depth time^−1^) and non-point sources (mass area^−1^ time^−1^), while local aquatic process rates may vary along gradients according to river size (Fig. [1A](https://www.nature.com/articles/s41467-022-28630-z#Fig1)).... While the assumption of uniform runoff is reasonable^[29](https://www.nature.com/articles/s41467-022-28630-z#ref-CR29 "Winston, W. E. & Criss, R. E. Dependence of mean and peak streamflow on basin area in the conterminous United States. J. Earth Sci. 27, 83–88 (2016)."),[30](https://www.nature.com/articles/s41467-022-28630-z#ref-CR30 "Galster, J. C. Natural and anthropogenic influences on the scaling of discharge with drainage area for multiple watersheds. Geosphere 3, 260–271 (2007).")^, uniform non-point sources is likely often violated in real watersheds^[31](https://www.nature.com/articles/s41467-022-28630-z#ref-CR31 "Mineau, M. M., Wollheim, W. M. & Stewart, R. J. An index to characterize the spatial distribution of land use within watersheds and implications for river network nutrient removal and export. Geophys. Res. Lett. 42, 10, (2015).")^. However, this assumption allows us to assess effects of network structure and hydrological conditions on cumulative biogeochemical function (Eq. [1](https://www.nature.com/articles/s41467-022-28630-z#Equ1))." Superlinear scaling in riverine function means that the contribution of larger watershed to carbon cycle, for instance, is disproportionately large when compared to the size of the watershed.
+
+Since the River Corridor Model (Son et al., 2022) has predicted sediment respiration rates across the Columbia River Basin, we are in a good position to investigate if the allometric scaling demonstrated by Wollheim et al under their assumptions, would also explain the spatial patterns of sediment respiration predicted by the RCM. Furthermore we can assess whether or not allometric scaling holds under heterogeneous inputs of water / spatially varying hyporheic hydraulics and heterogeneous inputs of respiration substrates, linked to landscape spatial heterogeneity.
+
+Besides the two assumptions employed by Wolheim et al., there are two conditions that would indicate that the scaling of ecosystem respiration vs. watershed area would be superlinear:
+
+1.  Cumulative benthic area (\~stream surface area) scales superlinearly with watershed area.
+2.  Local respiration rates are positively correlated with watershed area.
+
+Our analysis indicate that despite meeting these two conditions across the Willamette and the Yakima river basins, the cumulative sediment respiration scales **sublinearly** (still allometric) with watershed area. The main reason behind this pattern could be the violation of the two assumptions of superlinear scaling.
+
+We chose the Willamette and the Yakima as representative end-members of the climatic and hydrologic conditions observed across the Columbia River Basin, wet vs. arid.
+
+The following plots illustrate the draft storyline for our publication:![](images/guerrero_etal_23_stream_sa_scaling.png)Superlinear scaling of stream surface area with watershed area in the Willamette and Yakima River Basins. \*Confidence intervals around the scaling exponents exclude 1
+
+### Local respiration rates are positively correlated with watershed area except in larger streams
+
+![](images/guerrero_etal_23_scaling_local_respiration_rates.png)
