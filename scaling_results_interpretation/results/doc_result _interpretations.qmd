@@ -30,7 +30,6 @@ The following plots illustrate the draft storyline for our publication:
 
 ### Stream Surface Area Scales Superlinearly with watershed area
 
-
 ```{r, results='asis'}
 # Load the htmltools library
 library(htmltools)
@@ -48,11 +47,6 @@ iframe_code <- paste0(
 ```{=html}
 <iframe src="https://raw.githubusercontent.com/Scaling-Watershed-Function/2-swf-analytical.engine/main/scaling_analysis_willamette_yakima/results/TEST.html" style="width: 100%; height: 500px;"></iframe>
 ```
-
-
-
-
-
 ![Superlinear scaling of stream surface area with watershed area in the Willamette and Yakima River Basins. \*Confidence intervals around the scaling exponents exclude 1](images/guerrero_etal_23_stream_sa_scaling.png){fig-alt="A scatter plot of stream surface area versus watershed area in two rivers within the Columbia River Basin"}
 
 ### Local respiration rates are positively correlated with watershed area except in larger streams
